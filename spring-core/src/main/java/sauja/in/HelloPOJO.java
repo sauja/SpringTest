@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 
 //Registers a POJO as a spring bean
-@Component
+//@Component
 
 /*
 * The default scope of a Component is Singleton i.e when we get HelloPOJO bean in another
@@ -23,8 +23,13 @@ import org.springframework.stereotype.Component;
 * */
 //@Scope("prototype")
 public class HelloPOJO {
+    private final String version;
+    public HelloPOJO(String version)
+    {
+        this.version=version;
+    }
     public void sayHello(String message)
     {
-        System.out.println("Hello "+message+"!");
+        System.out.println("Hello "+message+"! "+version);
     }
 }

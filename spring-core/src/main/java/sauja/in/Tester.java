@@ -7,10 +7,11 @@ public class Tester {
     public static void main(String args[])
     {
         //Use annotation based context
-        AnnotationConfigApplicationContext context=new AnnotationConfigApplicationContext(HelloPOJO.class);
+        AnnotationConfigApplicationContext context=new AnnotationConfigApplicationContext(Application.class);
 
         //get bean using context
         HelloPOJO helloPOJO=context.getBean(HelloPOJO.class);
         helloPOJO.sayHello("User");
+        context.close();
     }
 }
