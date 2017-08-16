@@ -1,0 +1,8 @@
+
+spring-core/\.idea/
+
+spring-core/target/classes/sauja/in/
+
+spring-rest/\.idea/
+
+spring-rest/spring-rest\.iml
