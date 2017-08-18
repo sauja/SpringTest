@@ -7,6 +7,7 @@ public interface UserService {
     public List<Users> findAll();
     public Users getUser(String id);
     public void deleteUser(String id);
+    public Users findByEmail(String email);
     public void modifyUser(String id, Users users);
     public void createUser(Users users);
 }

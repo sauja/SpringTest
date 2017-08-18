@@ -1,82 +1,67 @@
 package sauja.in.api.repository.impl;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import sauja.in.StaticRepo;
 import sauja.in.api.entities.Users;
 import sauja.in.api.exception.BadRequestException;
 import sauja.in.api.exception.NotFoundException;
 import sauja.in.api.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
+    @Transactional(readOnly = true)
     public List<Users> findAll() {
-        return StaticRepo.getUsers();
+        TypedQuery<Users> query=entityManager.createNamedQuery("Users.findAll",Users.class);
+        return query.getResultList();
+
     }
 
     @Override
     public Users getUser(String id) {
-        List<Users> users=StaticRepo.getUsers();
-        for(Users u:users)
-        {
-            System.out.println("u:"+u.getId()+" id"+id);
-            if(u.getId().equals(id))
-                return u;
-        }
-        throw  new NotFoundException("User "+id+" not found");
+        return entityManager.find(Users.class,id);
     }
 
     @Override
-    public boolean findEmail(String email) {
-        List<Users> users=StaticRepo.getUsers();
-        for(Users u:users)
-        {
-            if(u.getEmail()==email)
-                return true;
-        }
-        return false;
+    @Transactional(readOnly = true)
+    public Users findByEmail(String email) {
+        TypedQuery<Users> query=entityManager.createNamedQuery("Users.findByEmail",Users.class);
+        query.setParameter("pEmail",email);
+        List<Users>  usersList=query.getResultList();
+        if(usersList.isEmpty())
+            return null;
+        return usersList.get(0);
+    }
+
+    @Override
+    public Users findById(String id) {
+        Users users=entityManager.find(Users.class,id);
+        if(users!=null)
+            return users;
+        return null;
     }
 
     @Override
     public void deleteUser(String id) {
-        List<Users> users=StaticRepo.getUsers();
-        for(Users u:users)
-        {
-            if(u.getId().equals(id))
-            {
-                users.remove(u);
-                return;
-            }
-        }
-        throw new NotFoundException("User Id "+id+" not found");
+        entityManager.remove(getUser(id));
     }
 
     @Override
     public void modifyUser(String id, Users users) {
-        List<Users> usersList=StaticRepo.getUsers();
-
-        for(Users u:usersList)
-        {
-            if(id.equals(u.getId()))
-            {
-                usersList.remove(u);
-                usersList.add(users);
-                return;
-            }
-        }
-        throw new NotFoundException("Id "+ users.getId()+" not found");
+        entityManager.merge(users);
     }
 
     @Override
     public void createUser(Users users) {
-        List<Users> usersList=StaticRepo.getUsers();
-        if(!findEmail(users.getEmail()))
-        {
-            usersList.add(users);
-            return;
-        }
-        throw new BadRequestException("User with id "+users.getId()+" already exists");
+        entityManager.persist(users);
     }
 }
