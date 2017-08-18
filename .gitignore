@@ -6,3 +6,9 @@ spring-core/target/classes/sauja/in/
 spring-rest/\.idea/
 
 spring-rest/spring-rest\.iml
+
+*.class
+
+spring-rest/target/spring-rest-1\.0-SNAPSHOT/WEB-INF/lib/
+
+spring-rest/target/

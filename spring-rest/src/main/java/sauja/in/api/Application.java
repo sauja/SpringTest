@@ -1,4 +1,4 @@
-package sauja.in;
+package sauja.in.api;
 
 
 import org.springframework.context.annotation.ComponentScan;
